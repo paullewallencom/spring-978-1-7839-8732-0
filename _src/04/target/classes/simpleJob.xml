@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+                                
+    <import resource="applicationContext.xml"/>
+   
+    <bean id="object1" class="com.packt.example.TaskletImpl">
+        <property name="message" value="Dad not well"/>
+    </bean>
+    
+    <bean id="object2" class="com.packt.example.TaskletImpl">
+        <property name="message" value="Call the doctor"/>
+    </bean>
+    
+    <bean id="object3" class="com.packt.example.TaskletImpl">
+        <property name="message" value="He is sweating"/>
+    </bean>
+    
+    <bean id="taskletStep" abstract="true"
+        class="org.springframework.batch.core.step.tasklet.TaskletStep">
+        <property name="jobRepository" ref="jobRepository"/>
+    </bean>
+    
+    <bean id="simpleJob" class="org.springframework.batch.core.job.SimpleJob">
+        <property name="name" value="simpleJob" />
+        <property name="steps">
+            <list>
+                <bean parent="taskletStep">
+                    <property name="tasklet" ref="object1"/>
+                </bean>
+                <bean parent="taskletStep">
+                    <property name="tasklet" ref="object2"/>
+                </bean>
+                <bean parent="taskletStep">
+                    <property name="tasklet" ref="object3"/>
+                </bean>
+            </list>
+        </property>
+        <property name="jobRepository" ref="jobRepository"/>
+    </bean>
+    
+</beans>

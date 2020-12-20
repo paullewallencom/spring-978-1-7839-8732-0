@@ -1,0 +1,8 @@
+<html>
+<body>
+<h3> Dear Customer,<h3>
+<p>${customer.firstName} ${customer.lastName}</p>
+<p>We have dispatched your order at address.</p>
+${Customer.address}
+</body>
+</html>

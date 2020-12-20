@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+							http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+							http://www.springframework.org/schema/context
+							http://www.springframework.org/schema/context/spring-context-4.0.xsd
+							http://www.springframework.org/schema/beans
+							http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+							http://www.springframework.org/schema/jee
+						    http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
+
+	<jee:jndi-lookup id="apachemqConnectionFactory" jndi-name="java:comp/env/jms/mqConnectionFactory" />
+	<jee:jndi-lookup id="PacktTestQueue1" jndi-name="java:comp/env/jms/PacktTestQueue1" />
+	<jee:jndi-lookup id="PacktTestQueue2" jndi-name="java:comp/env/jms/PacktTestQueue2" />
+
+	<bean id="packtMessageListener" class="com.packt.jms.PacktMessageListener">
+    	<property name="packtmessagesender" ref ="packtmessagesender" />
+    </bean>
+
+	<bean id="defaultMessageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+    	<property name="connectionFactory" ref ="apachemqConnectionFactory" />
+    	<property name="destination" ref ="PacktTestQueue1"/>
+		<property name="messageListener" ref ="packtMessageListener"/>
+		<property name="concurrentConsumers" value="2" />
+    </bean>
+	<bean id="packtmessagesender" class="com.packt.jms.PacktMessageSender">
+		<property name="jmsTemplate" ref="jmsTemplate"/>
+		<property name="queue" ref="PacktTestQueue2"/>
+	</bean>
+
+	
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="apachemqConnectionFactory" />
+	</bean>
+
+</beans>
